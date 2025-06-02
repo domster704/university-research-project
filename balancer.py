@@ -7,6 +7,7 @@ from typing import List
 
 import numpy as np
 
+import collector
 import config
 from algorithms import get_algorithm
 from models import NodeMetrics
@@ -31,10 +32,17 @@ def choose_node(metrics: List[NodeMetrics],
            m.mem_util < config.MEM_THRESHOLD
     ]
     if not metrics:
-        raise RuntimeError("Все ноды перегружены > 80 %!")
+        raise RuntimeError(
+            "Нет свежих метрик: Collector ещё не успел собрать данные "
+            "или все узлы отфильтрованы по порогам 80 %."
+        )
 
     # --- формируем матрицу решений --- #
-    X = np.vstack([m.to_vector() for m in metrics]).astype(float)
+    vectors = [
+        m.to_vector(prev=collector.get_prev(m.node_id))
+        for m in metrics
+    ]
+    X = np.vstack(vectors).astype(float)
     # --- считаем веса --- #
     w = entropy_weights(X)
     # --- применяем алгоритм --- #

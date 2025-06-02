@@ -11,6 +11,7 @@ from typing import Dict
 import httpx
 import uvicorn
 from fastapi import FastAPI, Request, Response
+from starlette.responses import JSONResponse
 
 import balancer
 import collector
@@ -34,6 +35,7 @@ def update_latency(node_id: str, dt_ms: float, window: int = config.LAT_WINDOW):
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     asyncio.create_task(collector.collect_loop())
+    await collector.wait_ready(timeout=5)
     yield
     pass
 
@@ -48,8 +50,17 @@ async def proxy(request: Request, call_next):
     """
     metrics = collector.get_metrics()
     node = balancer.choose_node(metrics, alg_name=request.headers.get("X-Balancer", config.DEFAULT_ALGORITHM))
+    try:
+        host, port = config.NODE_ENDPOINTS[node]
+    except KeyError:
+        # если не нашли – лог и 502
+        return JSONResponse(
+            {"detail": f"Неизвестный node_id '{node}' (нет в NODE_ENDPOINTS)"},
+            status_code=502
+        )
 
-    target_url = f"http://{node}:{request.url.port}{request.url.path}"
+    target_url = f"http://{host}:{port}{request.url.path}"
+
     async with httpx.AsyncClient() as client:
         start = time.perf_counter()
         resp = await client.request(

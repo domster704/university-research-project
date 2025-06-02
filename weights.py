@@ -7,16 +7,15 @@ import numpy as np
 
 
 def entropy_weights(x_matrix: np.ndarray) -> np.ndarray:
-    """Считает веса критериев по энтропийному принципу.
+    """Энтропийные веса с учётом m == 1."""
+    m, n = x_matrix.shape
+    if m == 1:
+        # Одна альтернатива → все веса одинаковые
+        return np.full(n, 1.0 / n)
 
-    Args:
-        x_matrix: Матрица решений (m вариантов × n критериев).
-
-    Returns:
-        Вектор весов w длиной n, сумма = 1.
-    """
-    x_matrix = x_matrix + 1e-12  # избегаем log(0)
-    P = x_matrix / x_matrix.sum(axis=0, keepdims=True)
-    E = (-1 / np.log(len(x_matrix))) * (P * np.log(P)).sum(axis=0)
-    d = 1.0 - E
+    x_matrix = x_matrix + 1e-12
+    p = x_matrix / x_matrix.sum(axis=0, keepdims=True)
+    k = 1.0 / np.log(m)
+    e = (-k) * (p * np.log(p)).sum(axis=0)  # энтропия
+    d = 1.0 - e
     return d / d.sum()

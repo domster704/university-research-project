@@ -9,7 +9,9 @@ import numpy as np
 def topsis(x_matrix: np.ndarray, w: np.ndarray) -> int:
     """Индекс лучшего варианта методом TOPSIS."""
     # 1) нормируем (векторная норма)
-    R = x_matrix / np.linalg.norm(x_matrix, axis=0)
+    norm = np.linalg.norm(x_matrix, axis=0)
+    norm[norm == 0] = 1.0  # если столбец весь из нулей
+    R = R = x_matrix / norm
     # 2) взвешиваем
     V = R * w
     # 3) определяем идеальные/анти-идеальные точки

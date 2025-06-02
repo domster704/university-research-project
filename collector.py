@@ -12,6 +12,7 @@ import docker
 import config
 from models import NodeMetrics
 
+_ready = asyncio.Event()
 _client = docker.from_env()
 _prev: Dict[str, NodeMetrics] = {}  # node_id -> последний снимок
 snapshot: Dict[str, NodeMetrics] = {}  # node_id -> актуальный снимок
@@ -23,7 +24,8 @@ async def collect_loop():
         await asyncio.sleep(config.COLLECT_PERIOD)
         for container in _client.containers.list():
             stats = container.stats(stream=False)
-            node_id = container.attrs["Node"]["Name"] if container.attrs.get("Node") else "local"
+            node_id = container.attrs["Name"] if container.attrs.get("Name") else "local"
+            node_id = node_id.replace('/', '')
             cpu_delta = stats["cpu_stats"]["cpu_usage"]["total_usage"] - \
                         stats["precpu_stats"]["cpu_usage"]["total_usage"]
             system_delta = stats["cpu_stats"]["system_cpu_usage"] - \
@@ -47,10 +49,34 @@ async def collect_loop():
             )
             snapshot[node_id] = nm
             pprint(snapshot)
+
+        # exit(0)
         # сдвигаем prev
         _prev.update(snapshot)
+
+
+async def wait_ready(timeout: float = 5.0):
+    """Блокируется, пока не появятся первые метрики."""
+    try:
+        await asyncio.wait_for(_ready.wait(), timeout)
+    except asyncio.TimeoutError:
+        # Если что-то пошло не так — подразумеваем хотя бы один dummy-узел
+        if not snapshot:
+            snapshot["dummy"] = NodeMetrics(
+                timestamp=NodeMetrics.now_iso(),
+                node_id="dummy",
+                cpu_util=0.0,
+                mem_util=0.0,
+                net_in_bytes=0,
+                net_out_bytes=0,
+            )
 
 
 def get_metrics() -> List[NodeMetrics]:
     """Возвращает копию последнего среза."""
     return list(snapshot.values())
+
+
+def get_prev(node_id: str) -> Dict[str, NodeMetrics]:
+    """Возвращает копию предыдущего среза."""
+    return _prev[node_id]
