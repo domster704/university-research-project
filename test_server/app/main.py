@@ -28,6 +28,7 @@ def cpu_burn(seconds: int = 10, complexity: int = 10_000):
     end = time.time() + seconds
     while time.time() < end:
         _ = sum(i * i for i in range(complexity))
+        del _
 
     return {"cpu_burn": f"completed {seconds}s × complexity={complexity}", "port": os.getenv("PORT")}
 
@@ -47,5 +48,6 @@ def mem_burn(mb: int = 100, seconds: int = 10):
     data = [bytearray(chunk) for _ in range(mb)]
 
     time.sleep(seconds)
+    del data
 
     return {"mem_burn": f"allocated {mb} MB for {seconds}s", "port": os.getenv("PORT")}

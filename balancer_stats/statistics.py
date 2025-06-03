@@ -64,22 +64,28 @@ class AsyncLoadTester:
         tasks = [self.load(endpoint, **kwargs) for endpoint in endpoints]
         return await asyncio.gather(*tasks)
 
-    def stats(self) -> list[int]:
-        ports = []
+    def stats(self):
+        cpu_ports = []
+        mem_ports = []
         for line in self._results_list:
             try:
-                status, payload = line.split(' ', 1)
-                data = json.loads(payload)
+                data = json.loads(line)
                 port = str(data.get("port"))
-                ports.append(port)
+                if "cpu_burn" in data:
+                    cpu_ports.append(port)
+                elif "mem_burn" in data:
+                    mem_ports.append(port)
             except Exception as e:
                 print(f"Ошибка разбора строки: {line} ({e})")
-        return dict(Counter(ports))
+        return {
+            "cpu": dict(Counter(cpu_ports)),
+            "mem": dict(Counter(mem_ports)),
+        }
 
 
 # Пример использования:
 async def main():
-    async with AsyncLoadTester("http://localhost:8000", requests_per_load=30, delay_between_requests=2) as tester:
+    async with AsyncLoadTester("http://localhost:8000", requests_per_load=50, delay_between_requests=2) as tester:
         await tester.multi_load(['cpu', 'mem', 'cpu', 'mem'])
 
         # Или отдельно:

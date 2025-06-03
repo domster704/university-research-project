@@ -1,60 +1,201 @@
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8002"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8002"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8002"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8002"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8002"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8002"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8002"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8002"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8002"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8002"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8002"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8002"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8002"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
-200 {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8002"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8002"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8002"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8002"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8002"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8002"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8001"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8001"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8003"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8003"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8003"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8003"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8001"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8001"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8002"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8002"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8002"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8002"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8002"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8002"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8002"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8002"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8002"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8002"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8002"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8003"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8003"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8002"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8003"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8003"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8001"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8001"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8003"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8003"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8001"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8001"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8001"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8001"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8001"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8001"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8002"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8002"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8002"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8002"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8003"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8003"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8003"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8003"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8003"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8003"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8002"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8002"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8002"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8002"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8002"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8002"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8002"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8002"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8001"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8001"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8001"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8001"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8001"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8001"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8003"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8001"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8003"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8001"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8003"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8003"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8002"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8002"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8002"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8002"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8002"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8002"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8002"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8002"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8002"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8002"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8002"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8002"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8002"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8002"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8002"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8002"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8002"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8002"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8002"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8002"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8001"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8001"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8003"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8003"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8003"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8003"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8003"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8003"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8001"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8001"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8001"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8001"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8002"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8002"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8002"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8002"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8001"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8001"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8003"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8003"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8001"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8001"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8003"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8002"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8002"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8002"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8003"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8003"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8002"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8002"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8002"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8002"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8002"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8001"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8002"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8001"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8002"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8002"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8001"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8003"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8003"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8003"}
+200 cpu: {"cpu_burn":"completed 10s × complexity=10000","port":"8003"}
+200 mem: {"mem_burn":"allocated 100 MB for 10s","port":"8003"}
+{'cpu': {'8002': 32, '8001': 34, '8003': 34}, 'mem': {'8002': 33, '8001': 32, '8003': 35}}
