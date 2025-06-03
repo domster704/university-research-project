@@ -26,17 +26,17 @@ def choose_node(metrics: List[NodeMetrics],
         node_id лучшей ноды.
     """
     # --- отбраковка по порогам --- #
-    metrics = [
-        m for m in metrics
-        if m.cpu_util < config.CPU_THRESHOLD and
-           m.mem_util < config.MEM_THRESHOLD
-    ]
+    # metrics = [
+    #     m for m in metrics
+    #     # if m.cpu_util < config.CPU_THRESHOLD and
+    #     #    m.mem_util < config.MEM_THRESHOLD
+    # ]
     if not metrics:
         raise RuntimeError(
             "Нет свежих метрик: Collector ещё не успел собрать данные "
             "или все узлы отфильтрованы по порогам 80 %."
         )
-
+    print(type(metrics), metrics)
     # --- формируем матрицу решений --- #
     vectors = [
         m.to_vector(prev=collector.get_prev(m.node_id))

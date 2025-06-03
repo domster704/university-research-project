@@ -4,98 +4,159 @@
 from __future__ import annotations
 
 import asyncio
+import time
 from pprint import pprint
-from typing import Dict, List
+from types import SimpleNamespace
+from typing import Dict
 
-import docker
+import aiodocker
+from aiodocker.containers import DockerContainer
 
 import config
 from models import NodeMetrics
 
 _ready = asyncio.Event()
-_client = docker.from_env()
 _prev: Dict[str, NodeMetrics] = {}  # node_id -> последний снимок
-snapshot: Dict[str, NodeMetrics] = {}  # node_id -> актуальный снимок
+# snapshot: Dict[str, NodeMetrics] = {}  # node_id -> актуальный снимок
+
+COLLECT_METRICS_ACTIONS_INTERVAL = 0.25
 
 
-async def collect_loop():
-    """Асинхронный цикл обновления `snapshot`."""
-    while True:
-        # TODO: добавить map для node_id (stats['id']): server_ip (из container.attrs)
-        await asyncio.sleep(config.COLLECT_PERIOD)
-        for container in _client.containers.list():
-            # "Networks": {
-            #     ...
-            #     "Ports": {
-            #       "8002/tcp": [
-            #         {
-            #           "HostIp": "0.0.0.0",
-            #           "HostPort": "8002"
-            #         }
-            #       ]
-            #     },
-            #     ...
-            #   },
-            port: int = int(
-                next(iter(
-                    container.attrs['NetworkSettings']['Ports'].values()
-                ))[0]["HostPort"]
-            )
-            stats = container.stats(stream=False)
-
-            node_id = container.attrs["Name"] if container.attrs.get("Name") else "local"
-            node_id = node_id.replace('/', '')
-
-            cpu_delta = stats["cpu_stats"]["cpu_usage"]["total_usage"] - \
-                        stats["precpu_stats"]["cpu_usage"]["total_usage"]
-            system_delta = stats["cpu_stats"]["system_cpu_usage"] - \
-                           stats["precpu_stats"]["system_cpu_usage"]
-            cpu_util = cpu_delta / (system_delta + 1e-12) * stats['cpu_stats']['online_cpus'] * 100
-
-            mem_util = stats["memory_stats"]["usage"] / stats["memory_stats"]["limit"] * 100
-
-            net_sum = stats.get("networks", {})
-            net_in = sum(n["rx_bytes"] for n in net_sum.values()) if net_sum else 0
-            net_out = sum(n["tx_bytes"] for n in net_sum.values()) if net_sum else 0
-
-            node_metrics = NodeMetrics(
-                timestamp=NodeMetrics.now_iso(),
-                node_id=node_id,
-                cpu_util=float(cpu_util),
-                mem_util=float(mem_util),
-                net_in_bytes=int(net_in),
-                net_out_bytes=int(net_out),
-            )
-            snapshot[node_id] = node_metrics
-
-            config.update_node_endpoints({
-                node_id: port
-            })
-            pprint(snapshot)
-
-        _prev.update(snapshot)
+async def get_container_stats(container: DockerContainer):
+    return (await container.stats(stream=False))[0]
 
 
-async def wait_ready(timeout: float = 5.0):
+class CollectorManager:
+    MAX_AGE_SECONDS = 2.0  # cколько секунд метрики считаются свежими
+
+    def __init__(self):
+        self.snapshot: dict[str, NodeMetrics] = {}
+        self._last_update = 0.0
+        self._lock = asyncio.Lock()
+
+    @staticmethod
+    async def _get_port(container: DockerContainer):
+        """
+        "Networks": {
+            ...
+            "Ports": {
+              "8002/tcp": [
+                {
+                  "HostIp": "0.0.0.0",
+                  "HostPort": "8002"
+                }
+              ]
+            },
+            ...
+          }
+        """
+
+        container_namespace = SimpleNamespace(**await container.show())
+        port: int = int(
+            next(iter(
+                container_namespace.NetworkSettings['Ports'].values()
+            ))[0]["HostPort"]
+        )
+        return port
+
+    async def _collect_once(self):
+        docker = aiodocker.Docker()
+
+        containers: list[DockerContainer] = await docker.containers.list()
+        tasks = [get_container_stats(c) for c in containers]
+        stats_list = await asyncio.gather(*tasks, return_exceptions=True)
+
+        async with self._lock:
+            for container, stats in zip(containers, stats_list):
+                if isinstance(stats, Exception):
+                    continue
+
+                container_namespace = SimpleNamespace(**await container.show())
+
+                # Node ID
+                node_id = container_namespace.Name.replace('/', '')
+
+                # CPU %
+                cpu_delta = stats["cpu_stats"]["cpu_usage"]["total_usage"] - \
+                            stats["precpu_stats"]["cpu_usage"]["total_usage"]
+                system_delta = stats["cpu_stats"]["system_cpu_usage"] - \
+                               stats["precpu_stats"]["system_cpu_usage"]
+                cpu_util = cpu_delta / (system_delta + 1e-12) * stats['cpu_stats']['online_cpus'] * 100
+
+                # MEM %
+                mem_util = stats["memory_stats"]["usage"] / stats["memory_stats"]["limit"] * 100
+
+                # NET bytes
+                net_sum = stats.get("networks", {})
+                net_in = sum(n["rx_bytes"] for n in net_sum.values()) if net_sum else 0
+                net_out = sum(n["tx_bytes"] for n in net_sum.values()) if net_sum else 0
+
+                node_metrics = NodeMetrics(
+                    timestamp=NodeMetrics.now_iso(),
+                    node_id=node_id,
+                    cpu_util=float(cpu_util),
+                    mem_util=float(mem_util),
+                    net_in_bytes=int(net_in),
+                    net_out_bytes=int(net_out),
+                )
+
+                self.snapshot[node_id] = node_metrics
+                config.update_node_endpoints({
+                    node_id: await self._get_port(container)
+                })
+            pprint(self.snapshot)
+
+            self._last_update = time.time()
+            _prev.update(self.snapshot)
+
+        await docker.close()
+
+    async def run_forever(self):
+        while True:
+            try:
+                await self._collect_once()
+            except Exception as e:
+                print("metrics collection failed: ", e.with_traceback())
+            await asyncio.sleep(config.COLLECT_PERIOD)
+
+    async def ensure_fresh(self):
+        """Обновить, только если данные старее, чем MAX_AGE."""
+        if time.time() - self._last_update < self.MAX_AGE_SECONDS:
+            return
+        async with self._lock:  # защита от параллельных запросов
+            if time.time() - self._last_update < self.MAX_AGE_SECONDS:
+                return  # другой корутин уже успел
+            await self._collect_once()
+
+    def get_metrics(self) -> dict[str, NodeMetrics]:
+        # читаем без await, но под блокировкой – чтобы не поймать частичный апдейт
+        return self.snapshot.copy()
+
+
+# async def collect_metrics() -> None:
+#     for container in _client.containers.list():
+#         stats = container.stats(stream=False)
+#
+#         await asyncio.sleep(COLLECT_METRICS_ACTIONS_INTERVAL)
+#
+#         # pprint(snapshot)
+#
+#
+# async def collect_metrics_loop():
+#     """Асинхронный цикл обновления `snapshot`."""
+#     while True:
+#         await asyncio.sleep(config.COLLECT_PERIOD)
+#         await collect_metrics()
+#         print("Обновление по таймеру")
+#         _prev.update(snapshot)
+
+
+async def wait_ready(timeout: float = 10.0):
     """Блокируется, пока не появятся первые метрики."""
     try:
         await asyncio.wait_for(_ready.wait(), timeout)
     except asyncio.TimeoutError:
-        # Если что-то пошло не так — подразумеваем хотя бы один dummy-узел
-        if not snapshot:
-            snapshot["dummy"] = NodeMetrics(
-                timestamp=NodeMetrics.now_iso(),
-                node_id="dummy",
-                cpu_util=0.0,
-                mem_util=0.0,
-                net_in_bytes=0,
-                net_out_bytes=0,
-            )
-
-
-def get_metrics() -> List[NodeMetrics]:
-    """Возвращает копию последнего среза."""
-    return list(snapshot.values())
+        raise TimeoutError("Не удалось собрать метрики за время ожидания")
 
 
 def get_prev(node_id: str) -> Dict[str, NodeMetrics]:

@@ -1,15 +1,20 @@
 # app.py
 """FastAPI-прокси: перенаправляет запросы на выбранную Docker-ноду."""
-
 from __future__ import annotations
 
 import asyncio
+import sys
+
 import time
-from contextlib import asynccontextmanager
+from contextlib import asynccontextmanager, suppress
+from pprint import pprint
+from types import SimpleNamespace
 from typing import Dict
 
+import aiodocker
 import aiohttp
 import uvicorn
+from aiodocker.containers import DockerContainer
 from fastapi import FastAPI, Request, Response
 from starlette.responses import JSONResponse
 
@@ -19,6 +24,7 @@ import config
 
 # скользящее окно задержек
 _latency: Dict[str, list[float]] = {}
+collector_manager = collector.CollectorManager()
 
 
 def update_latency(node_id: str, dt_ms: float, window: int = config.LAT_WINDOW):
@@ -28,22 +34,35 @@ def update_latency(node_id: str, dt_ms: float, window: int = config.LAT_WINDOW):
     if len(buf) > window:
         buf.pop(0)
     # пишем в глобальный снимок
-    if node_id in collector.snapshot:
-        collector.snapshot[node_id].latency_ms = sum(buf) / len(buf)
+    if node_id in collector_manager.snapshot:
+        collector_manager.snapshot[node_id].latency_ms = sum(buf) / len(buf)
 
+async def main():
+    docker = aiodocker.Docker()
+
+    containers: list[DockerContainer] = await docker.containers.list()
+    pprint(containers)
+    for container in containers:
+        stats = await container.stats(stream=False)
+        namespace = SimpleNamespace(**await container.show())
+
+        pprint(namespace)
+        break
+    await docker.close()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    asyncio.create_task(collector.collect_loop())
     app.state.clientSession = aiohttp.ClientSession(
         connector=aiohttp.TCPConnector(limit=100, ttl_dns_cache=300),
         timeout=aiohttp.ClientTimeout(total=30),
     )
-    await collector.wait_ready(timeout=5)
+
+    app.state.collector_task = asyncio.create_task(collector_manager.run_forever())
 
     yield
 
     await app.state.clientSession.close()
+    app.state.collector_task.cancel()
 
 
 app = FastAPI(lifespan=lifespan)
@@ -54,12 +73,13 @@ async def proxy(request: Request, call_next):
     """
     Middleware, заменяющая обычную обработку на проксирование.
     """
-    metrics = collector.get_metrics()
+    await collector_manager.ensure_fresh()
+    metrics = collector_manager.get_metrics()
+
     node = balancer.choose_node(metrics, alg_name=request.headers.get("X-Balancer", config.DEFAULT_ALGORITHM))
     try:
         host, port = config.NODE_ENDPOINTS[node]
     except KeyError:
-        # если не нашли – лог и 502
         return JSONResponse(
             {"detail": f"Неизвестный node_id '{node}' (нет в NODE_ENDPOINTS)"},
             status_code=502
@@ -71,6 +91,7 @@ async def proxy(request: Request, call_next):
     start = time.perf_counter()
 
     session: aiohttp.ClientSession = app.state.clientSession
+
     async with session.request(
             request.method,
             target_url,
@@ -89,4 +110,9 @@ async def proxy(request: Request, call_next):
 
 
 if __name__ == "__main__":
-    uvicorn.run("app:app", port=8000, reload=True)
+    uvicorn.run(
+        app,
+        port=8000,
+        loop="asyncio",
+        factory=False,
+    )
