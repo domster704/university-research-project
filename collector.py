@@ -130,25 +130,7 @@ class CollectorManager:
 
     def get_metrics(self) -> dict[str, NodeMetrics]:
         # читаем без await, но под блокировкой – чтобы не поймать частичный апдейт
-        return self.snapshot.copy()
-
-
-# async def collect_metrics() -> None:
-#     for container in _client.containers.list():
-#         stats = container.stats(stream=False)
-#
-#         await asyncio.sleep(COLLECT_METRICS_ACTIONS_INTERVAL)
-#
-#         # pprint(snapshot)
-#
-#
-# async def collect_metrics_loop():
-#     """Асинхронный цикл обновления `snapshot`."""
-#     while True:
-#         await asyncio.sleep(config.COLLECT_PERIOD)
-#         await collect_metrics()
-#         print("Обновление по таймеру")
-#         _prev.update(snapshot)
+        return list(self.snapshot.values())
 
 
 async def wait_ready(timeout: float = 10.0):
