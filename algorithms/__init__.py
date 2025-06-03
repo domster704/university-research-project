@@ -1,4 +1,3 @@
-# algorithms/__init__.py
 """Реестр всех алгоритмов многокритериального выбора."""
 
 from __future__ import annotations

@@ -1,4 +1,3 @@
-# algorithms/nsga2.py
 """Минимальная реализация NSGA-II под задачу «минимизировать max»."""
 
 from __future__ import annotations

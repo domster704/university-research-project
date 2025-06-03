@@ -1,4 +1,3 @@
-# algorithms/electre.py
 """Упрощённый ELECTRE III для online-использования."""
 
 from __future__ import annotations

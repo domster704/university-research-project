@@ -1,6 +1,6 @@
 fastapi
 uvicorn
-httpx
 numpy
 pymoo
 docker
+aiohttp

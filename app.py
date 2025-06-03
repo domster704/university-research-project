@@ -8,7 +8,7 @@ import time
 from contextlib import asynccontextmanager
 from typing import Dict
 
-import httpx
+import aiohttp
 import uvicorn
 from fastapi import FastAPI, Request, Response
 from starlette.responses import JSONResponse
@@ -35,9 +35,15 @@ def update_latency(node_id: str, dt_ms: float, window: int = config.LAT_WINDOW):
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     asyncio.create_task(collector.collect_loop())
+    app.state.clientSession = aiohttp.ClientSession(
+        connector=aiohttp.TCPConnector(limit=100, ttl_dns_cache=300),
+        timeout=aiohttp.ClientTimeout(total=30),
+    )
     await collector.wait_ready(timeout=5)
+
     yield
-    pass
+
+    await app.state.clientSession.close()
 
 
 app = FastAPI(lifespan=lifespan)
@@ -61,25 +67,25 @@ async def proxy(request: Request, call_next):
 
     target_url = f"http://{host}:{port}{request.url.path}"
 
-    async with httpx.AsyncClient() as client:
-        start = time.perf_counter()
-        resp = await client.request(
+    headers = {k: v for k, v in request.headers.items()}
+    start = time.perf_counter()
+
+    session: aiohttp.ClientSession = app.state.clientSession
+    async with session.request(
             request.method,
             target_url,
             params=request.query_params,
-            headers=request.headers.raw,
-            content=await request.body(),
-            timeout=None,
-        )
-        dt = (time.perf_counter() - start) * 1_000
-        update_latency(node, dt)
+            headers=headers,
+            data=await request.body(),
+    ) as resp:
+        body = await resp.read()
 
-    proxy_resp = Response(
-        content=resp.content,
-        status_code=resp.status_code,
-        headers=resp.headers,
-    )
-    return proxy_resp
+    dt = (time.perf_counter() - start) * 1_000
+    update_latency(node, dt)
+
+    return Response(content=body,
+                    status_code=resp.status,
+                    headers=resp.headers)
 
 
 if __name__ == "__main__":

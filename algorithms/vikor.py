@@ -1,4 +1,3 @@
-# algorithms/vikor.py
 """VIKOR (вариация рациональности)."""
 
 from __future__ import annotations

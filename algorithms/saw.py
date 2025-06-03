@@ -1,4 +1,3 @@
-# algorithms/saw.py
 """SAW (Simple Additive Weighting) c энтропийными весами."""
 
 from __future__ import annotations

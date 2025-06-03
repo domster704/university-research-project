@@ -1,4 +1,3 @@
-# algorithms/topsis.py
 """TOPSIS с «издержковыми» критериями."""
 
 from __future__ import annotations
