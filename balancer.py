@@ -1,7 +1,4 @@
-# balancer.py
 """Фасад: агрегирует сбор метрик, веса и алгоритмы."""
-
-from __future__ import annotations
 
 from typing import List
 
@@ -36,7 +33,6 @@ def choose_node(metrics: List[NodeMetrics],
             "Нет свежих метрик: Collector ещё не успел собрать данные "
             "или все узлы отфильтрованы по порогам 80 %."
         )
-    print(type(metrics), metrics)
     # --- формируем матрицу решений --- #
     vectors = [
         m.to_vector(prev=collector.get_prev(m.node_id))
@@ -45,6 +41,7 @@ def choose_node(metrics: List[NodeMetrics],
     X = np.vstack(vectors).astype(float)
     # --- считаем веса --- #
     w = entropy_weights(X)
+    print(w)
     # --- применяем алгоритм --- #
     alg = get_algorithm(alg_name)
     best_idx = alg(X, w)

@@ -3,7 +3,7 @@
 CPU_THRESHOLD: float = 3.0  # 300 %
 MEM_THRESHOLD: float = 0.9  # 90 %
 NIC_GBPS: int = 1  # пропускная способность 1 Gb/s
-COLLECT_PERIOD: float = 0.5  # шаг опроса docker stats (сек)
+COLLECT_PERIOD: float = 1  # шаг опроса docker stats (сек)
 LAT_WINDOW: int = 100  # скольких последних запросов хранить для latency
 DEFAULT_ALGORITHM: str = "topsis"  # алгоритм по умолчанию
 

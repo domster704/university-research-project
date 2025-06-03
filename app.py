@@ -1,12 +1,9 @@
-# app.py
 """FastAPI-прокси: перенаправляет запросы на выбранную Docker-ноду."""
 from __future__ import annotations
 
 import asyncio
-import sys
-
 import time
-from contextlib import asynccontextmanager, suppress
+from contextlib import asynccontextmanager
 from pprint import pprint
 from types import SimpleNamespace
 from typing import Dict
@@ -37,6 +34,7 @@ def update_latency(node_id: str, dt_ms: float, window: int = config.LAT_WINDOW):
     if node_id in collector_manager.snapshot:
         collector_manager.snapshot[node_id].latency_ms = sum(buf) / len(buf)
 
+
 async def main():
     docker = aiodocker.Docker()
 
@@ -49,6 +47,7 @@ async def main():
         pprint(namespace)
         break
     await docker.close()
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -73,7 +72,7 @@ async def proxy(request: Request, call_next):
     """
     Middleware, заменяющая обычную обработку на проксирование.
     """
-    await collector_manager.ensure_fresh()
+    # await collector_manager.ensure_fresh()
     metrics = collector_manager.get_metrics()
 
     node = balancer.choose_node(metrics, alg_name=request.headers.get("X-Balancer", config.DEFAULT_ALGORITHM))

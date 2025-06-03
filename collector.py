@@ -1,4 +1,3 @@
-# collector.py
 """Сбор свежих метрик с Docker-нод через docker-SDK."""
 
 from __future__ import annotations
@@ -27,7 +26,7 @@ async def get_container_stats(container: DockerContainer):
 
 
 class CollectorManager:
-    MAX_AGE_SECONDS = 2.0  # cколько секунд метрики считаются свежими
+    MAX_AGE_SECONDS = 1.0  # cколько секунд метрики считаются свежими
 
     def __init__(self):
         self.snapshot: dict[str, NodeMetrics] = {}
@@ -65,6 +64,7 @@ class CollectorManager:
         containers: list[DockerContainer] = await docker.containers.list()
         tasks = [get_container_stats(c) for c in containers]
         stats_list = await asyncio.gather(*tasks, return_exceptions=True)
+        print("Обновление метрик...")
 
         async with self._lock:
             for container, stats in zip(containers, stats_list):
@@ -104,7 +104,6 @@ class CollectorManager:
                 config.update_node_endpoints({
                     node_id: await self._get_port(container)
                 })
-            pprint(self.snapshot)
 
             self._last_update = time.time()
             _prev.update(self.snapshot)
@@ -123,6 +122,8 @@ class CollectorManager:
         """Обновить, только если данные старее, чем MAX_AGE."""
         if time.time() - self._last_update < self.MAX_AGE_SECONDS:
             return
+
+        print("Обновление метрик из-за старых данных...")
         async with self._lock:  # защита от параллельных запросов
             if time.time() - self._last_update < self.MAX_AGE_SECONDS:
                 return  # другой корутин уже успел
