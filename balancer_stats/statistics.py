@@ -86,11 +86,11 @@ class AsyncLoadTester:
 # Пример использования:
 async def main():
     async with AsyncLoadTester("http://localhost:8000", requests_per_load=50, delay_between_requests=2) as tester:
-        await tester.multi_load(['cpu', 'mem', 'cpu', 'mem'])
+        # await tester.multi_load(['cpu', 'mem', 'cpu', 'mem'])
 
         # Или отдельно:
         # await tester.load('cpu')
-        # await tester.load('mem')
+        await tester.load('mem')
         print(tester.stats())
 
 

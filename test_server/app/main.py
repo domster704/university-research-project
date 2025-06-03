@@ -1,3 +1,4 @@
+import gc
 import os
 import time
 
@@ -49,5 +50,6 @@ def mem_burn(mb: int = 100, seconds: int = 10):
 
     time.sleep(seconds)
     del data
+    gc.collect()
 
     return {"mem_burn": f"allocated {mb} MB for {seconds}s", "port": os.getenv("PORT")}
