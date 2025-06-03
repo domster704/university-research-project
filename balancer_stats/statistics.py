@@ -4,7 +4,7 @@ import aiohttp
 
 async def make_request() -> str:
     async with aiohttp.ClientSession() as session:
-        async with session.get("http://localhost:8000/") as resp:
+        async with session.get("http://localhost:8000/cpu") as resp:
             print(resp.status, await resp.text())
             return await resp.text()
 

@@ -1,0 +1,136 @@
+{
+  "blkio_stats": {
+    "io_merged_recursive": [],
+    "io_queue_recursive": [],
+    "io_service_bytes_recursive": [],
+    "io_service_time_recursive": [],
+    "io_serviced_recursive": [],
+    "io_time_recursive": [],
+    "io_wait_time_recursive": [],
+    "sectors_recursive": []
+  },
+  "cpu_stats": {
+    "cpu_usage": {
+      "percpu_usage": [
+        42912600,
+        0,
+        24015589100,
+        25151936600,
+        1723300,
+        36608700,
+        5229500,
+        0,
+        75200,
+        0,
+        2436400,
+        0,
+        279192700,
+        170997100,
+        158614400,
+        0
+      ],
+      "total_usage": 49865315600,
+      "usage_in_kernelmode": 120000000,
+      "usage_in_usermode": 48060000000
+    },
+    "online_cpus": 16,
+    "system_cpu_usage": 362750690000000,
+    "throttling_data": {
+      "periods": 0,
+      "throttled_periods": 0,
+      "throttled_time": 0
+    }
+  },
+  "id": "b816e3f7be838f96f1c1897b0c862106a68724b3a3ca9c3b1381fb011010b33b",
+  "memory_stats": {
+    "limit": 8177143808,
+    "max_usage": 137535488,
+    "stats": {
+      "active_anon": 8192,
+      "active_file": 0,
+      "cache": 0,
+      "dirty": 0,
+      "hierarchical_memory_limit": 9223372036854771712,
+      "hierarchical_memsw_limit": 9223372036854771712,
+      "inactive_anon": 29511680,
+      "inactive_file": 0,
+      "mapped_file": 0,
+      "pgfault": 34385,
+      "pgmajfault": 0,
+      "pgpgin": 36806,
+      "pgpgout": 29599,
+      "rss": 29519872,
+      "rss_huge": 0,
+      "total_active_anon": 8192,
+      "total_active_file": 0,
+      "total_cache": 0,
+      "total_dirty": 0,
+      "total_inactive_anon": 29511680,
+      "total_inactive_file": 0,
+      "total_mapped_file": 0,
+      "total_pgfault": 34385,
+      "total_pgmajfault": 0,
+      "total_pgpgin": 36806,
+      "total_pgpgout": 29599,
+      "total_rss": 29519872,
+      "total_rss_huge": 0,
+      "total_unevictable": 0,
+      "total_writeback": 0,
+      "unevictable": 0,
+      "writeback": 0
+    },
+    "usage": 31297536
+  },
+  "name": "/server1",
+  "networks": {
+    "eth0": {
+      "rx_bytes": 4374,
+      "rx_dropped": 0,
+      "rx_errors": 0,
+      "rx_packets": 38,
+      "tx_bytes": 1312,
+      "tx_dropped": 0,
+      "tx_errors": 0,
+      "tx_packets": 19
+    }
+  },
+  "num_procs": 0,
+  "pids_stats": {
+    "current": 3
+  },
+  "precpu_stats": {
+    "cpu_usage": {
+      "percpu_usage": [
+        42912600,
+        0,
+        22994590100,
+        25151936600,
+        1723300,
+        34784800,
+        5229500,
+        0,
+        75200,
+        0,
+        2436400,
+        0,
+        279192700,
+        170997100,
+        158614400,
+        0
+      ],
+      "total_usage": 48842492700,
+      "usage_in_kernelmode": 120000000,
+      "usage_in_usermode": 47110000000
+    },
+    "online_cpus": 16,
+    "system_cpu_usage": 362734650000000,
+    "throttling_data": {
+      "periods": 0,
+      "throttled_periods": 0,
+      "throttled_time": 0
+    }
+  },
+  "preread": "2025-06-03T10:02:58.140130689Z",
+  "read": "2025-06-03T10:02:59.145756098Z",
+  "storage_stats": {}
+}
