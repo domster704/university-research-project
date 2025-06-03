@@ -8,7 +8,10 @@ LAT_WINDOW: int = 100  # скольких последних запросов х
 DEFAULT_ALGORITHM: str = "topsis"  # алгоритм по умолчанию
 
 NODE_ENDPOINTS = {
-    "server1": ("127.0.0.1", 8001),
-    "server2": ("127.0.0.1", 8002),
-    "server3": ("127.0.0.1", 8003),
 }
+
+
+def update_node_endpoints(nodes: dict) -> None:
+    """Добавляет новые ноды в словарь NODE_ENDPOINTS."""
+    for name, addr in nodes.items():
+        NODE_ENDPOINTS[name] = ("127.0.0.1", addr)

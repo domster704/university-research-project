@@ -19,11 +19,28 @@ snapshot: Dict[str, NodeMetrics] = {}  # node_id -> актуальный сни�
 
 
 async def collect_loop():
-    """Асинхронный цикл обновления `_snapshot`."""
+    """Асинхронный цикл обновления `snapshot`."""
     while True:
         # TODO: добавить map для node_id (stats['id']): server_ip (из container.attrs)
         await asyncio.sleep(config.COLLECT_PERIOD)
         for container in _client.containers.list():
+            # "Networks": {
+            #     ...
+            #     "Ports": {
+            #       "8002/tcp": [
+            #         {
+            #           "HostIp": "0.0.0.0",
+            #           "HostPort": "8002"
+            #         }
+            #       ]
+            #     },
+            #     ...
+            #   },
+            port: int = int(
+                next(iter(
+                    container.attrs['NetworkSettings']['Ports'].values()
+                ))[0]["HostPort"]
+            )
             stats = container.stats(stream=False)
 
             node_id = container.attrs["Name"] if container.attrs.get("Name") else "local"
@@ -50,6 +67,10 @@ async def collect_loop():
                 net_out_bytes=int(net_out),
             )
             snapshot[node_id] = node_metrics
+
+            config.update_node_endpoints({
+                node_id: port
+            })
             pprint(snapshot)
 
         _prev.update(snapshot)
