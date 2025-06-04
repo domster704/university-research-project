@@ -5,6 +5,7 @@ from __future__ import annotations
 import numpy as np
 
 
+# Время выполнения: 0.000999450684 секунд
 def topsis(x_matrix: np.ndarray, w: np.ndarray) -> int:
     """Возвращает индекс лучшего варианта методом TOPSIS (все критерии – это издержки)"""
     # 1) нормируем (векторная норма)

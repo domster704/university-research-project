@@ -75,7 +75,11 @@ async def proxy(request: Request, call_next):
     # await collector_manager.ensure_fresh()
     metrics = collector_manager.get_metrics()
 
+    start = time.time()
     node = balancer.choose_node(metrics, alg_name=request.headers.get("X-Balancer", config.DEFAULT_ALGORITHM))
+    elapsed = time.time() - start
+    print(f"Время выполнения: {elapsed:.12f} секунд")
+
     try:
         host, port = config.NODE_ENDPOINTS[node]
     except KeyError:

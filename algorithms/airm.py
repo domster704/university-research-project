@@ -3,6 +3,7 @@ from __future__ import annotations
 import numpy as np
 
 
+# Время выполнения: 0.006000 секунд
 def airm(
         x_matrix: np.ndarray,
         w: np.ndarray,
