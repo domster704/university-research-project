@@ -15,4 +15,6 @@ def entropy_weights(x_matrix: np.ndarray) -> np.ndarray:
     # Формула Шеннона
     e = (-k) * (p * np.log(p)).sum(axis=0)
     d = 1.0 - e
+
+    d = np.clip(d, 0.0, None)
     return d / d.sum()
