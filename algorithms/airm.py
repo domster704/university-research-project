@@ -21,7 +21,7 @@ def airm(
     x_matrix : ndarray (m, n)
         Матрица решений: m альтернатив × n критериев.
     w : 1-D ndarray (n,)
-        Номинальный вектор весов критериев. Будет автоматически нормирован.
+        Номинальный вектор весов критериев.
     n_iter : int, default 10000
         Число Монте-Карло итераций (чем больше, тем стабильнее результат).
     alpha_scale : float, default 100.0
@@ -79,15 +79,3 @@ def airm(
     print(counts)
 
     return int(counts.argmax())
-
-
-if __name__ == "__main__":
-    X = np.array([[0, 30, 12],
-                  [0, 40, 5],
-                  [0, 3, 8]])
-
-    w = np.array([0.9, 0.01, 0.0])
-
-    for _ in range(5):
-        print(airm(X, w, n_iter=2000,
-                   random_state=None))
