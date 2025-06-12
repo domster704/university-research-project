@@ -22,7 +22,6 @@ import config
 # скользящее окно задержек
 _latency: Dict[str, list[float]] = {}
 collector_manager = collector.CollectorManager()
-clientSession: aiohttp.ClientSession | None = None
 
 
 def update_latency(node_id: str, dt_ms: float, window: int = config.LAT_WINDOW):
@@ -52,17 +51,17 @@ async def main():
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    clientSession = aiohttp.ClientSession(
+    app.state.clientSession = aiohttp.ClientSession(
         connector=aiohttp.TCPConnector(limit=100, ttl_dns_cache=300),
         timeout=aiohttp.ClientTimeout(total=30),
     )
 
-    collector_task = asyncio.create_task(collector_manager.run_forever())
+    app.state.collector_task = asyncio.create_task(collector_manager.run_forever())
 
     yield
 
-    await clientSession.close()
-    collector_task.cancel()
+    await app.state.clientSession.close()
+    app.state.collector_task.cancel()
 
 
 app = FastAPI(lifespan=lifespan)
@@ -94,7 +93,7 @@ async def proxy(request: Request, call_next):
     headers = {k: v for k, v in request.headers.items()}
     start = time.perf_counter()
 
-    async with clientSession.request(
+    async with app.state.clientSession.request(
             request.method,
             target_url,
             params=request.query_params,

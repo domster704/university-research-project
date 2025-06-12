@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
-from airm import airm
-from electre import electre
-from saw import saw
-from topsis import topsis
-from lc import lc
+from .airm import airm
+from .electre import electre
+from .saw import saw
+from .topsis import topsis
+from .lc import lc
 
 REGISTRY = {
     "saw": saw,

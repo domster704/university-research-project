@@ -39,8 +39,11 @@ def choose_node(metrics: List[NodeMetrics],
         for m in metrics
     ]
     X = np.vstack(vectors).astype(float)
+    print(X)
     # --- считаем веса --- #
     w = entropy_weights(X)
+
+    print(w)
     # --- применяем алгоритм --- #
     alg = get_algorithm(alg_name)
     best_idx = alg(X, w)
