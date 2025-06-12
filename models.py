@@ -1,4 +1,3 @@
-# models.py
 """Модели данных и вспомогательные функции."""
 
 from __future__ import annotations
@@ -47,7 +46,6 @@ class NodeMetrics:
         Returns:
             Вектор [cpu_util, mem_util, net_util] в диапазоне [0,1].
         """
-        # CPU и MEM уже нормированы.
         cpu = self.cpu_util
         mem = self.mem_util
 
@@ -62,8 +60,6 @@ class NodeMetrics:
         net_util = min(net_Bps / nic_Bps, 1.0)  # clamp в [0,1]
 
         return [cpu, mem, net_util]
-
-    # ---------- сервис ---------- #
 
     @staticmethod
     def now_iso() -> str:

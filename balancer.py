@@ -22,7 +22,6 @@ def choose_node(metrics: List[NodeMetrics],
     Returns:
         node_id лучшей ноды.
     """
-    # --- отбраковка по порогам --- #
     # metrics = [
     #     m for m in metrics
     #     # if m.cpu_util < config.CPU_THRESHOLD and
@@ -33,18 +32,13 @@ def choose_node(metrics: List[NodeMetrics],
             "Нет свежих метрик: Collector ещё не успел собрать данные "
             "или все узлы отфильтрованы по порогам 80 %."
         )
-    # --- формируем матрицу решений --- #
     vectors = [
         m.to_vector(prev=collector.get_prev(m.node_id))
         for m in metrics
     ]
     X = np.vstack(vectors).astype(float)
-    print(X)
-    # --- считаем веса --- #
     w = entropy_weights(X)
 
-    print(w)
-    # --- применяем алгоритм --- #
     alg = get_algorithm(alg_name)
     best_idx = alg(X, w)
     return metrics[best_idx].node_id

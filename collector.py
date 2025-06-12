@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import asyncio
 import time
-from pprint import pprint
 from types import SimpleNamespace
 from typing import Dict
 
@@ -81,10 +80,10 @@ class CollectorManager:
                             stats["precpu_stats"]["cpu_usage"]["total_usage"]
                 system_delta = stats["cpu_stats"]["system_cpu_usage"] - \
                                stats["precpu_stats"]["system_cpu_usage"]
-                cpu_util = cpu_delta / (system_delta + 1e-12) * stats['cpu_stats']['online_cpus'] * 100
+                cpu_util = cpu_delta / (system_delta + 1e-12) * stats['cpu_stats']['online_cpus']
 
                 # MEM %
-                mem_util = stats["memory_stats"]["usage"] / stats["memory_stats"]["limit"] * 100
+                mem_util = stats["memory_stats"]["usage"] / stats["memory_stats"]["limit"]
 
                 # NET bytes
                 net_sum = stats.get("networks", {})
@@ -108,6 +107,7 @@ class CollectorManager:
             self._last_update = time.time()
             _prev.update(self.snapshot)
 
+        # pprint(self.snapshot)
         await docker.close()
 
     async def run_forever(self):
@@ -129,9 +129,9 @@ class CollectorManager:
                 return  # другой корутин уже успел
             await self._collect_once()
 
-    def get_metrics(self) -> dict[str, NodeMetrics]:
+    def get_metrics(self) -> tuple[list[NodeMetrics], dict[str, NodeMetrics]]:
         # читаем без await, но под блокировкой – чтобы не поймать частичный апдейт
-        return list(self.snapshot.values())
+        return list(self.snapshot.values()), self.snapshot
 
 
 async def wait_ready(timeout: float = 10.0):

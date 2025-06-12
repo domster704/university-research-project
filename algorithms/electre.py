@@ -8,7 +8,7 @@ _CONC_THRESHOLD = 0.6  # порог согласия
 _DIS_THRESHOLD = 0.4  # порог несогласия
 
 
-# Время выполнения: 0.002000093460 секунд
+# Время выполнения: 0.001065731049 секунд
 def electre(x_matrix: np.ndarray, w: np.ndarray) -> int:
     """Индекс лучшего варианта по ELECTRE III (упрощённо)."""
     m, n = x_matrix.shape

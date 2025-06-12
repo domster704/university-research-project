@@ -18,6 +18,7 @@ from starlette.responses import JSONResponse
 import balancer
 import collector
 import config
+from balancer_stats.cpu_mem_resources import update_resources, get_avg_resources, update_resources_by_metrics
 
 # скользящее окно задержек
 _latency: Dict[str, list[float]] = {}
@@ -30,7 +31,7 @@ def update_latency(node_id: str, dt_ms: float, window: int = config.LAT_WINDOW):
     buf.append(dt_ms)
     if len(buf) > window:
         buf.pop(0)
-    # пишем в глобальный снимок
+
     if node_id in collector_manager.snapshot:
         collector_manager.snapshot[node_id].latency_ms = sum(buf) / len(buf)
 
@@ -65,20 +66,25 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+INTERNAL_PATHS = {"/stats", "/docs", "/openapi.json", "/redoc"}
 
 
+# TODO: добавить сбор средней загруженности CPU и памяти по портам
 @app.middleware("http")
 async def proxy(request: Request, call_next):
     """
     Middleware, заменяющая обычную обработку на проксирование.
     """
     # await collector_manager.ensure_fresh()
-    metrics = collector_manager.get_metrics()
+    if request.url.path in INTERNAL_PATHS:
+        return await call_next(request)
+
+    metrics, metrics_dict = collector_manager.get_metrics()
 
     start = time.time()
     node = balancer.choose_node(metrics, alg_name=request.headers.get("X-Balancer", config.DEFAULT_ALGORITHM))
     elapsed = time.time() - start
-    print(f"Время выполнения: {elapsed:.12f} секунд")
+    # print(f"Время выполнения: {elapsed:.12f} секунд")
 
     try:
         host, port = config.NODE_ENDPOINTS[node]
@@ -87,6 +93,8 @@ async def proxy(request: Request, call_next):
             {"detail": f"Неизвестный node_id '{node}' (нет в NODE_ENDPOINTS)"},
             status_code=502
         )
+
+    update_resources_by_metrics(metrics_dict, request.url.path, port)
 
     target_url = f"http://{host}:{port}{request.url.path}"
 
@@ -108,6 +116,13 @@ async def proxy(request: Request, call_next):
     return Response(content=body,
                     status_code=resp.status,
                     headers=resp.headers)
+
+
+@app.get("/stats")
+async def stats():
+    """Сводные метрики по задержкам и ресурсам."""
+    data = get_avg_resources()
+    return JSONResponse(data)
 
 
 if __name__ == "__main__":
