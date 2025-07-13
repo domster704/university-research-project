@@ -49,8 +49,6 @@ def airm(
     x = np.asarray(x_matrix, dtype=float)
     m, n = x.shape
 
-    if benefit_mask is None:
-        benefit_mask = np.ones(n, dtype=bool)
     benefit_mask = np.asarray(benefit_mask, dtype=bool)
     if benefit_mask.shape != (n,):
         raise ValueError("benefit_mask должен иметь длину n")

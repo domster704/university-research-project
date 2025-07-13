@@ -130,7 +130,11 @@ class AsyncLoadTester:
 
 
 async def main():
-    async with AsyncLoadTester("http://localhost:8000", requests_per_load=50, delay_between_requests=2) as tester:
+    async with AsyncLoadTester(
+            base_url="http://localhost:8000",
+            requests_per_load=50,
+            delay_between_requests=2
+    ) as tester:
         await tester.multi_load([
             'cpu', 'mem',
             'cpu', 'mem',

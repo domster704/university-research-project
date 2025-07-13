@@ -8,6 +8,8 @@ from typing import List
 
 import numpy as np
 
+from config import COLLECT_PERIOD
+
 
 @dataclass
 class NodeMetrics:
@@ -34,7 +36,7 @@ class NodeMetrics:
 
     def to_vector(self,
                   prev: NodeMetrics | None = None,
-                  interval: float = 1.0,
+                  interval: float = COLLECT_PERIOD,
                   nic_gbps: int = 1) -> List[float]:
         """Преобразует метрику в числовой вектор для MCDM.
 
@@ -65,16 +67,3 @@ class NodeMetrics:
     def now_iso() -> str:
         """Текущее время в ISO-8601."""
         return datetime.now(timezone.utc).isoformat()
-
-
-def strip_meta(metrics: List[NodeMetrics]) -> np.ndarray:
-    """Формирует матрицу признаков M×N без текстовых колонок.
-
-    Args:
-        metrics: Список снимков.
-
-    Returns:
-        NumPy-матрица размера (len(metrics), 3)
-    """
-    vectors = [m.to_vector() for m in metrics]
-    return np.asarray(vectors, dtype=float)
