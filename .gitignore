@@ -3,4 +3,4 @@ old
 __pycache__
 **/*test*.*
 
-!tests/*
+!tests/**
