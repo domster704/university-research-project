@@ -2,3 +2,5 @@ old
 .idea
 __pycache__
 **/*test*.*
+
+!tests/*
