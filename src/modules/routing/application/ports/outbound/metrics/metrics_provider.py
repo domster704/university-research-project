@@ -1,6 +1,6 @@
 from typing import Protocol
 
-from src.modules.routing.domain.entities.node_metrics import NodeMetrics
+from src.modules.routing.domain.entities.node.node_metrics import NodeMetrics
 
 
 class MetricsProvider(Protocol):

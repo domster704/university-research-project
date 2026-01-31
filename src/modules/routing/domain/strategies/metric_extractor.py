@@ -1,0 +1,11 @@
+from typing import Protocol, Any
+
+
+class MetricExtractor(Protocol):
+    """
+    Экстрактор извлекает кусок метрик из raw docker stats.
+    Добавление новой метрики = новый класс-экстрактор.
+    """
+
+    def extract(self, raw_stats: dict[str, Any]) -> dict[str, Any]:
+        ...

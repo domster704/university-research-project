@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import datetime, timezone
 
 
 @dataclass(frozen=True)
@@ -41,3 +42,7 @@ class NodeMetrics:
         net_util = min(net_Bps / nic_Bps, 1.0)  # clamp в [0,1]
 
         return [cpu, mem, net_util]
+
+    @staticmethod
+    def now() -> datetime:
+        return datetime.now(timezone.utc)
