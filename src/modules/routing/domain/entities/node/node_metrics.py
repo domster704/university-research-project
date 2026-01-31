@@ -41,6 +41,9 @@ class NodeMetrics:
         nic_Bps = nic_gbps * 125_000_000  # 1 Gb/s = 125 MB/s
         net_util = min(net_Bps / nic_Bps, 1.0)  # clamp в [0,1]
 
+
+        lat = (self.latency_ms or 0.0) / MAX_LATENCY_MS
+
         return [cpu, mem, net_util]
 
     @staticmethod

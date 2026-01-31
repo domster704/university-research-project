@@ -1,4 +1,4 @@
-from src.modules.routing.domain.strategies.metric_extractor import MetricExtractor
+from src.modules.routing.domain.policies.metric_extractor import MetricExtractor
 
 
 class MemoryExtractor(MetricExtractor):

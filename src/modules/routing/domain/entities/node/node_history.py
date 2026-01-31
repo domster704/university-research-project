@@ -1,4 +1,4 @@
-from models import NodeMetrics
+from old.models import NodeMetrics
 
 
 class NodeHistory:

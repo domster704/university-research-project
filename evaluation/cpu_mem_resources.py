@@ -1,7 +1,7 @@
 from collections import defaultdict
 from typing import DefaultDict
 
-from models import NodeMetrics
+from old.models import NodeMetrics
 
 _cpu_sum: DefaultDict[str, float] = defaultdict(float)
 _cpu_cnt: DefaultDict[str, int] = defaultdict(int)

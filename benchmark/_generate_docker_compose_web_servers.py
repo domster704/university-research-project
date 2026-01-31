@@ -17,5 +17,5 @@ compose = {
     "services": services
 }
 
-with open("docker-compose_test-servers.yml", "w") as f:
+with open("docker-compose_docker-servers.yml", "w") as f:
     yaml.dump(compose, f, sort_keys=False)

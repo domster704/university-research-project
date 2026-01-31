@@ -10,7 +10,7 @@ from src.modules.routing.application.ports.outbound.metrics.collector import Col
 from src.modules.routing.application.ports.outbound.metrics.metrics_repository import MetricsRepository
 from src.modules.routing.application.ports.outbound.node.node_registry import NodeRegistry
 from src.modules.routing.domain.entities.node.node_metrics import NodeMetrics
-from src.modules.routing.domain.strategies.metric_extractor import MetricExtractor
+from src.modules.routing.domain.policies.metric_extractor import MetricExtractor
 
 
 async def _get_container_stats(container: DockerContainer) -> dict:

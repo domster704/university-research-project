@@ -20,7 +20,7 @@ class ChooseNodeUseCase(ChooseNodePort):
         self.weights = weights
         self.strategy = strategy
 
-    async def execute(self) -> tuple[str, int]:
+    async def execute(self) -> tuple[str, str, int]:
         metrics = self.repo.list_latest()
         if not metrics:
             raise RuntimeError("Нет метрик: коллектор ещё не собрал данные")
@@ -36,5 +36,7 @@ class ChooseNodeUseCase(ChooseNodePort):
         X: np.ndarray = np.vstack(vectors).astype(float)
         w: list[float] = self.weights.compute(X)
 
-        idx: int = self.strategy.choose(X, w)
-        return metrics[idx].node_id, idx
+        node_id: int = self.strategy.choose(X, w)
+        host, port = self.registry.get_endpoint(node_id)
+
+        return node_id, host, port
