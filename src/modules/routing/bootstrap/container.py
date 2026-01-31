@@ -2,6 +2,9 @@ from __future__ import annotations
 
 from src.modules.routing.adapters.outbound.algorithms.mcdm.topsis import TopsisStrategy
 from src.modules.routing.adapters.outbound.metrics.docker.docker_collector import DockerMetricsCollector
+from src.modules.routing.adapters.outbound.metrics.docker.extractors.cpu import CpuExtractor
+from src.modules.routing.adapters.outbound.metrics.docker.extractors.memory import MemoryExtractor
+from src.modules.routing.adapters.outbound.metrics.docker.extractors.network import NetworkExtractor
 from src.modules.routing.adapters.outbound.metrics.storage.memory_repository import InMemoryMetricsRepository
 from src.modules.routing.adapters.outbound.registry.docker_node_registry import DockerNodeRegistry
 from src.modules.routing.adapters.outbound.weights.weights_provider import EntropyWeightsProvider
@@ -29,9 +32,16 @@ class RoutingModule:
             strategy=self.strategy,
         )
 
+        extractors = [
+            CpuExtractor(),
+            MemoryExtractor(),
+            NetworkExtractor(),
+        ]
+
         self.collector = DockerMetricsCollector(
             repo=self.repo,
             registry_updater=self.registry,
+            extractors=extractors,
         )
 
         self.updater = MetricsUpdater(

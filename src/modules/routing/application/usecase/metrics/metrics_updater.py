@@ -1,12 +1,18 @@
 import asyncio
 
+from src.modules.routing.application.ports.outbound.metrics.collector import CollectorManager
+
 
 class MetricsUpdater:
     """
     Application-сервис, который решает КОГДА собирать метрики.
     """
 
-    def __init__(self, collector, collector_interval: float):
+    def __init__(
+            self,
+            collector: CollectorManager,
+            collector_interval: float
+    ):
         self.collector = collector
         self.period = collector_interval
         self._task: asyncio.Task | None = None
@@ -29,7 +35,7 @@ class MetricsUpdater:
     async def _run_forever(self) -> None:
         while not self._stop.is_set():
             try:
-                await self.collector.collect_once()
+                await self.collector.collect()
             except Exception as e:
                 print("metrics collection failed:", repr(e))
             await asyncio.sleep(self.period)
