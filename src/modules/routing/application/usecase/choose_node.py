@@ -4,6 +4,7 @@ from src.modules.routing.application.ports.inbound.node.choose_node_port import 
 from src.modules.routing.application.ports.outbound.metrics.metrics_history import MetricsHistory
 from src.modules.routing.application.ports.outbound.metrics.metrics_provider import MetricsProvider
 from src.modules.routing.application.ports.outbound.weights.weights_provider import WeightsProvider
+from src.modules.routing.config.settings import settings
 from src.modules.routing.domain.services.balancer import Balancer
 
 
@@ -26,10 +27,15 @@ class ChooseNodeUseCase(ChooseNodePort):
             raise RuntimeError("Нет метрик")
 
         vectors = [
-            m.to_vector(prev=self.history.get_prev(m.node_id))
+            m.to_vector(
+                interval=settings.collector_interval,
+                prev=self.history.get_prev(m.node_id)
+            )
             for m in metrics
         ]
 
-        X = np.vstack(vectors)
+        X = np.vstack(vectors).astype(float)
         w = self.weights.compute(X)
-        return self.balancer.choose(metrics)
+
+        idx: int = self.balancer.choose(X, w)
+        return metrics[idx].node_id, idx

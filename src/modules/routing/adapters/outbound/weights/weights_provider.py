@@ -3,5 +3,5 @@ from src.modules.routing.application.ports.outbound.weights.weights_provider imp
 
 
 class EntropyWeightsProvider(WeightsProvider):
-    def compute(self, matrix):
+    def compute(self, matrix) -> list[float]:
         return entropy_weights(matrix)

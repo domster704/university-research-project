@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Request
+from starlette.responses import JSONResponse
 
-from src.modules.routing.application.dto.incoming_request import IncomingRequest
 from src.modules.routing.application.ports.inbound.node.choose_node_port import ChooseNodePort
 
 
@@ -16,3 +16,9 @@ class ChooseNodeRouter:
         async def proxy(request: Request):
             host, port = await choose_node.execute()
             return {"host": host, "port": port}
+
+        @self.router.get("/stats")
+        async def stats():
+            """Сводные метрики по задержкам и ресурсам."""
+            data = get_avg_resources()
+            return JSONResponse(data)

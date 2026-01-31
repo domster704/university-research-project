@@ -1,8 +1,8 @@
 from typing import Protocol
 
-from src.modules.routing.domain.entities.node_metrics import NodeMetrics
+import numpy as np
 
 
 class RankingStrategy(Protocol):
-    def choose(self, metrics: list[NodeMetrics]) -> str:
+    def choose(self, scores: np.ndarray, weights: np.ndarray) -> int:
         ...
