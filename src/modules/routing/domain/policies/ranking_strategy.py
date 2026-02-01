@@ -1,8 +1,8 @@
 from typing import Protocol
 
-import numpy as np
+from src.modules.types.numpy import Matrix, Vector
 
 
 class RankingStrategy(Protocol):
-    def choose(self, scores: np.ndarray, weights: np.ndarray) -> int:
+    def choose(self, scores: Matrix, weights: Vector) -> int:
         ...

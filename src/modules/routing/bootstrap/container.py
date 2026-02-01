@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from src.modules.routing.adapters.outbound.algorithms.mcdm.topsis import TopsisStrategy
 from src.modules.routing.adapters.outbound.metrics.docker.docker_collector import DockerMetricsCollector
 from src.modules.routing.adapters.outbound.metrics.docker.extractors.cpu import CpuExtractor
 from src.modules.routing.adapters.outbound.metrics.docker.extractors.memory import MemoryExtractor
@@ -12,7 +11,9 @@ from src.modules.routing.adapters.outbound.registry.docker_node_registry import 
 from src.modules.routing.adapters.outbound.weights.weights_provider import EntropyWeightsProvider
 from src.modules.routing.application.usecase.metrics.metrics_updater import MetricsUpdater
 from src.modules.routing.application.usecase.node.choose_node import ChooseNodeUseCase
+from src.modules.routing.bootstrap.algorithm_registry import AlgorithmRegistry, AlgorithmName
 from src.modules.routing.config.settings import settings
+from src.modules.routing.domain.policies.ranking_strategy import RankingStrategy
 
 
 class RoutingModule:
@@ -25,7 +26,9 @@ class RoutingModule:
         self.repo = InMemoryMetricsRepository(history_limit=32)
         self.registry = DockerNodeRegistry()
         self.weights = EntropyWeightsProvider()
-        self.strategy = TopsisStrategy()
+
+        algorithm_registry = AlgorithmRegistry()
+        self.strategy: RankingStrategy = algorithm_registry.get(AlgorithmName.TOPSIS)
 
         self.choose_node_uc = ChooseNodeUseCase(
             repo=self.repo,
