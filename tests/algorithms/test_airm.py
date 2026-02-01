@@ -1,5 +1,5 @@
 import numpy as np
-from algorithms.airm import airm
+from old.algorithms import airm
 
 def test_airm_deterministic():
     X = np.array([[1, 0, 0], [0, 1, 0]])

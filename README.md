@@ -29,8 +29,8 @@ python balancer.py
 Пример использования в коде:
 
 ```python
-from balancer import choose_node
-from collector import CollectorManager
+from old.balancer import choose_node
+from old.collector import CollectorManager
 
 metrics, _ = CollectorManager().get_metrics()
 best = choose_node(metrics, alg_name='topsis')
@@ -121,8 +121,8 @@ class NodeMetrics:
 ```python
 import asyncio, heapq, time
 from typing import List
-from models import NodeMetrics
-from collector import collector_manager
+from old.models import NodeMetrics
+from old.collector import collector_manager
 
 
 class Replicator:
