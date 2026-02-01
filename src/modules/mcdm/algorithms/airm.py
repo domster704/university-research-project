@@ -1,12 +1,12 @@
-from __future__ import annotations
-
 import numpy as np
+
+from src.modules.types.numpy import Matrix, Vector, BoolVector, IntVector
 
 
 # Время выполнения: 0.006000 секунд
 def airm(
-        x_matrix: np.ndarray,
-        w: np.ndarray,
+        x_matrix: Matrix,
+        w: Vector,
         *,
         n_iter: int = 1000,
         alpha_scale: float = 5,
@@ -43,37 +43,35 @@ def airm(
         raise ValueError("все веса должны быть > 0")
 
     if benefit_mask is None:
-        benefit_mask = [False, False, False]
+        benefit_mask = np.zeros(len(w), dtype=bool)
 
     rng = np.random.default_rng(random_state)
-    x = np.asarray(x_matrix, dtype=float)
+    x: Matrix = np.asarray(x_matrix, dtype=float)
     m, n = x.shape
 
-    benefit_mask = np.asarray(benefit_mask, dtype=bool)
+    benefit_mask: BoolVector = np.asarray(benefit_mask, dtype=bool)
     if benefit_mask.shape != (n,):
         raise ValueError("benefit_mask должен иметь длину n")
 
-    # --- приведение всех критериев к «выгода» ---------------
-    x_adj = x.copy()
+    # приведение всех критериев к «выгода»
+    x_adj: Matrix = x.copy()
     # для затратных: чем меньше, тем лучше ⇒ инвертируем
     if (~benefit_mask).any():
         x_adj[:, ~benefit_mask] = x_adj[:, ~benefit_mask].max(axis=0) - x_adj[:, ~benefit_mask]
 
-    # --- масштабирование столбцов в [0, 1] ------------------
-    col_min = x_adj.min(axis=0)
-    col_max = x_adj.max(axis=0)
-    denom = np.where(col_max == col_min, 1.0, col_max - col_min)
-    x_norm = (x_adj - col_min) / denom
+    # масштабирование столбцов в [0, 1]
+    col_min: Vector = x_adj.min(axis=0)
+    col_max: Vector = x_adj.max(axis=0)
+    denominator: Vector = np.where(col_max == col_min, 1.0, col_max - col_min)
+    x_norm: Matrix = (x_adj - col_min) / denominator
 
-    # --- рандомизация весов и подсчёт побед -----------------
-    counts = np.zeros(m, dtype=int)
-    alpha = w * alpha_scale
+    # рандомизация весов и подсчёт побед
+    counts: IntVector = np.zeros(m, dtype=int)
+    alpha: Vector = w * alpha_scale
 
     for _ in range(n_iter):
-        w_rand = rng.dirichlet(alpha)
-        scores = x_norm @ w_rand  # агрегированный индекс
+        w_rand: Vector = rng.dirichlet(alpha)
+        scores: Vector = x_norm @ w_rand  # агрегированный индекс
         counts[scores.argmax()] += 1  # победитель этой итерации
-
-    print(counts)
 
     return int(counts.argmax())

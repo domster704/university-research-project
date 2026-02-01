@@ -38,4 +38,5 @@ class MetricsUpdater:
                 await self.collector.collect()
             except Exception as e:
                 print("metrics collection failed:", repr(e))
+
             await asyncio.sleep(self.period)

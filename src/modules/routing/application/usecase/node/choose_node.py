@@ -1,5 +1,6 @@
 import numpy as np
 
+from old.models import NodeMetrics
 from src.modules.routing.application.ports.inbound.node.choose_node_port import ChooseNodePort
 from src.modules.routing.application.ports.outbound.metrics.metrics_repository import MetricsRepository
 from src.modules.routing.application.ports.outbound.node.node_registry import NodeRegistry
@@ -36,7 +37,8 @@ class ChooseNodeUseCase(ChooseNodePort):
         X: np.ndarray = np.vstack(vectors).astype(float)
         w: list[float] = self.weights.compute(X)
 
-        node_id: int = self.strategy.choose(X, w)
-        host, port = self.registry.get_endpoint(node_id)
+        chosen_idx: int = self.strategy.choose(X, w)
+        chosen_node: NodeMetrics = metrics[chosen_idx]
+        host, port = self.registry.get_endpoint(chosen_node.node_id)
 
-        return node_id, host, port
+        return chosen_node.node_id, host, port

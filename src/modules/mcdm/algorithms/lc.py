@@ -1,10 +1,12 @@
 import numpy as np
 
+from src.modules.types.numpy import Matrix, Vector
+
 
 # Время выполнения: 0.006000 секунд
 def lc(
-        x_matrix: np.ndarray,
-        w: np.ndarray,
+        x_matrix: Matrix,
+        w: Vector,
 ) -> int:
     """
     Метод взвешенной суммы (Linear Scalarization).
@@ -24,5 +26,5 @@ def lc(
     if (w < 0).any():
         raise ValueError("все веса должны быть > 0")
 
-    scores: np.ndarray = x_matrix @ w
+    scores: Vector = x_matrix @ w
     return int(np.argmax(scores))

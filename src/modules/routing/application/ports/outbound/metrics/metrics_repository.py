@@ -18,6 +18,3 @@ class MetricsRepository(Protocol):
 
     def add_latency(self, node_id: str, latency_ms: float) -> None:
         ...
-
-    def get_latency_window(self, node_id: str) -> list[float]:
-        ...

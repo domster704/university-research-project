@@ -5,6 +5,8 @@ from src.modules.routing.adapters.outbound.metrics.docker.docker_collector impor
 from src.modules.routing.adapters.outbound.metrics.docker.extractors.cpu import CpuExtractor
 from src.modules.routing.adapters.outbound.metrics.docker.extractors.memory import MemoryExtractor
 from src.modules.routing.adapters.outbound.metrics.docker.extractors.network import NetworkExtractor
+from src.modules.routing.adapters.outbound.metrics.storage.memory_aggregation_repository import \
+    InMemoryMetricsAggregationRepository
 from src.modules.routing.adapters.outbound.metrics.storage.memory_repository import InMemoryMetricsRepository
 from src.modules.routing.adapters.outbound.registry.docker_node_registry import DockerNodeRegistry
 from src.modules.routing.adapters.outbound.weights.weights_provider import EntropyWeightsProvider
@@ -37,6 +39,8 @@ class RoutingModule:
             MemoryExtractor(),
             NetworkExtractor(),
         ]
+
+        self.metrics_agg = InMemoryMetricsAggregationRepository()
 
         self.collector = DockerMetricsCollector(
             repo=self.repo,

@@ -3,6 +3,8 @@ from __future__ import annotations
 from collections import defaultdict, deque
 from threading import RLock
 
+import numpy as np
+
 from src.modules.routing.application.ports.outbound.metrics.metrics_repository import MetricsRepository
 from src.modules.routing.domain.entities.node.node_metrics import NodeMetrics
 
@@ -28,11 +30,12 @@ class InMemoryMetricsRepository(MetricsRepository):
             lambda: deque(maxlen=latency_window)
         )
 
-    def _avg_latency(self, node_id: str) -> float | None:
+    def _latency_p95(self, node_id: str) -> float | None:
         window = self._latency.get(node_id)
         if not window:
             return None
-        return sum(window) / len(window)
+
+        return float(np.percentile(window, 95))
 
     def _with_latency(self, m: NodeMetrics) -> NodeMetrics:
         return NodeMetrics(
@@ -42,7 +45,7 @@ class InMemoryMetricsRepository(MetricsRepository):
             mem_util=m.mem_util,
             net_in_bytes=m.net_in_bytes,
             net_out_bytes=m.net_out_bytes,
-            latency_ms=self._avg_latency(m.node_id),
+            latency_ms=self._latency_p95(m.node_id),
         )
 
     def upsert(self, metrics: NodeMetrics) -> None:
@@ -77,11 +80,3 @@ class InMemoryMetricsRepository(MetricsRepository):
         """
         with self._lock:
             self._latency[node_id].append(latency_ms)
-
-    def get_latency_window(self, node_id: str) -> list[float]:
-        """
-        Возвращает копию окна latency (FIFO).
-        """
-        with self._lock:
-            window = self._latency.get(node_id)
-            return list(window) if window else []

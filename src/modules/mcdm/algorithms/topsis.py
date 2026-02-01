@@ -1,30 +1,54 @@
-from __future__ import annotations
-
 import numpy as np
+
+from src.modules.types.numpy import Matrix, Vector
 
 
 # Время выполнения: 0.000999450684 секунд
-def topsis(x_matrix: np.ndarray, w: np.ndarray) -> int:
-    """Возвращает индекс лучшего варианта методом TOPSIS (все критерии – это издержки)"""
-    # 1) нормируем (векторная норма)
-    norm = np.linalg.norm(x_matrix, axis=0)
-    norm[norm == 0] = 1.0  # чтобы не делить на 0, если столбец нулевой
-    R = x_matrix / norm
+def topsis(x_matrix: Matrix, w: Vector) -> int:
+    """Выбор лучшей альтернативы методом TOPSIS.
 
-    # 2) взвешиваем
-    V = R * w
+    Все критерии рассматриваются как критерии «издержек»
+    (меньшее значение — лучшее)
 
-    # 3) идеальная и анти-идеальная точки (для «cost» критериев: чем меньше, тем лучше)
-    A_pos = V.min(axis=0)  # идеальная (минимум)
-    A_neg = V.max(axis=0)  # анти-идеальная (максимум)
+    Args:
+        x_matrix: Матрица решений размера (m, n),
+            где m — число альтернатив, n — число критериев
+        w: Вектор весов критериев размера (n,)
 
-    # 4) расстояния до идеальных точек
-    D_pos = np.linalg.norm(V - A_pos, axis=1)
-    D_neg = np.linalg.norm(V - A_neg, axis=1)
+    Returns:
+        Индекс (0-based) наилучшей альтернативы
+    """
 
-    # 5) относительная близость к идеалу
-    denominator = D_pos + D_neg
-    C = np.divide(D_neg, denominator, out=np.zeros_like(denominator), where=denominator != 0)
+    # Нормализация матрицы решений
+    # Каждый столбец нормируется по евклидовой норме
+    norm: Vector = np.linalg.norm(x_matrix, axis=0)
+    norm[norm == 0] = 1.0  # защита от деления на 0 для константных критериев
 
-    # 6) индекс наилучшего варианта
+    R: Matrix = x_matrix / norm
+
+    # Взвешивание нормализованной матрицы
+    V: Matrix = R * w
+
+    # Определение идеального и анти-идеального решений
+    # Для критериев-издержек:
+    #   - идеальное решение — минимум по столбцу
+    #   - анти-идеальное — максимум по столбцу
+    A_pos: Vector = V.min(axis=0)
+    A_neg: Vector = V.max(axis=0)
+
+    # Расчёт расстояний до идеального и анти-идеального решений
+    D_pos: Vector = np.linalg.norm(V - A_pos, axis=1)
+    D_neg: Vector = np.linalg.norm(V - A_neg, axis=1)
+
+    # Вычисление относительной близости к идеальному решению
+    # C_i = D_neg / (D_pos + D_neg)
+    denominator: Vector = D_pos + D_neg
+    C: Vector = np.divide(
+        D_neg,
+        denominator,
+        out=np.zeros_like(denominator),
+        where=denominator != 0
+    )
+
+    # Выбор альтернативы с максимальной близостью к идеалу
     return int(np.argmax(C))
