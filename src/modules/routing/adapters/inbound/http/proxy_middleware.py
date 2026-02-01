@@ -53,6 +53,9 @@ class ProxyMiddleware(BaseHTTPMiddleware):
             body = await resp.read()
 
             latency_ms = (time.perf_counter() - start) * 1000
+
+            # TODO: add diff with deadline time.
+            # latency = realtime - deadline_time
             self.metrics_repo.add_latency(node_id, latency_ms)
 
             out_headers = dict(resp.headers)

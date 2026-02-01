@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 import asyncio
+import logging
 from types import SimpleNamespace
 
 import aiodocker
 from aiodocker.containers import DockerContainer
 
+from src.modules.routing.adapters.outbound.metrics.snapshot_builder import MetricsSnapshotBuilder
 from src.modules.routing.application.ports.outbound.metrics.collector import (
     CollectorManager,
 )
@@ -18,6 +20,8 @@ from src.modules.routing.application.ports.outbound.node.node_registry import (
 from src.modules.routing.domain.entities.node.node_metrics import NodeMetrics
 from src.modules.routing.domain.policies.metric_extractor import MetricExtractor
 
+
+logger = logging.getLogger("docker.metrics.collector")
 
 async def _get_container_stats(container: DockerContainer) -> dict:
     # aiodocker возвращает список, берём [0]
@@ -44,14 +48,15 @@ class DockerMetricsCollector(CollectorManager):
     """
 
     def __init__(
-        self,
-        repo: MetricsRepository,
-        registry_updater: NodeRegistry,
-        extractors: list[MetricExtractor],
+            self,
+            repo: MetricsRepository,
+            registry_updater: NodeRegistry,
+            extractors: list[MetricExtractor],
     ):
         self.repo = repo
         self.registry_updater = registry_updater
         self.extractors = extractors
+        self.snapshot_builder = MetricsSnapshotBuilder(self.repo)
 
     async def collect(self) -> None:
         docker = aiodocker.Docker()
@@ -61,6 +66,9 @@ class DockerMetricsCollector(CollectorManager):
                 *[_get_container_stats(c) for c in containers],
                 return_exceptions=True,
             )
+
+            snapshot_logger: list[dict] = []
+            snapshot_time = NodeMetrics.now().isoformat()
 
             for container, stats in zip(containers, stats_list):
                 if isinstance(stats, Exception):
@@ -85,6 +93,11 @@ class DockerMetricsCollector(CollectorManager):
                 self.registry_updater.update(
                     node_id=node_id, host="127.0.0.1", port=port
                 )
+
+            snapshot: list[dict] = MetricsSnapshotBuilder(self.repo).build()
+            logger.info({
+                "nodes": snapshot,
+            })
 
         finally:
             await docker.close()

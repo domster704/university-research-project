@@ -1,3 +1,5 @@
+import logging
+
 import numpy as np
 
 from src.modules.routing.application.ports.inbound.node.choose_node_port import (
@@ -16,14 +18,16 @@ from src.modules.routing.config.settings import settings
 from src.modules.routing.domain.entities.node.node_metrics import NodeMetrics
 from src.modules.types.numpy import Vector, Matrix
 
+logger = logging.getLogger("decision")
+
 
 class ChooseNodeUseCase(ChooseNodePort):
     def __init__(
-        self,
-        repo: MetricsRepository,
-        registry: NodeRegistry,
-        weights: WeightsProvider,
-        strategy,
+            self,
+            repo: MetricsRepository,
+            registry: NodeRegistry,
+            weights: WeightsProvider,
+            strategy,
     ):
         self.repo = repo
         self.registry = registry
@@ -48,5 +52,16 @@ class ChooseNodeUseCase(ChooseNodePort):
         chosen_idx: int = self.strategy.choose(X, w)
         chosen_node: NodeMetrics = metrics[chosen_idx]
         host, port = self.registry.get_endpoint(chosen_node.node_id)
+
+        logger.info({
+            "message": "chosen_node",
+            "data": {
+                "algorithm": self.strategy.__class__.__name__,
+                "node_id": chosen_node.node_id,
+                "cpu": chosen_node.cpu_util,
+                "mem": chosen_node.mem_util,
+                "latency": chosen_node.latency_ms,
+            }}
+        )
 
         return chosen_node.node_id, host, port

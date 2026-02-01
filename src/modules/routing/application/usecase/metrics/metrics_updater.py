@@ -1,4 +1,5 @@
 import asyncio
+import logging
 
 from src.modules.routing.application.ports.outbound.metrics.collector import (
     CollectorManager,

@@ -1,10 +1,13 @@
 import uvicorn
 from fastapi import FastAPI
 
+from src.logging_config import setup_logging
 from src.modules.routing.adapters.inbound.http.proxy_middleware import ProxyMiddleware
 from src.modules.routing.adapters.inbound.http.router import ChooseNodeRouter
 from src.modules.routing.bootstrap.container import RoutingModule
 from src.modules.routing.bootstrap.lifespan import lifespan
+
+setup_logging()
 
 
 def create_app() -> FastAPI:
