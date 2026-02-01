@@ -16,10 +16,9 @@ class NodeMetrics:
     net_out_bytes: int
     latency_ms: float | None = None
 
-    def to_vector(self,
-                  interval: float,
-                  prev: NodeMetrics | None = None,
-                  nic_gbps: int = 1) -> list[float]:
+    def to_vector(
+        self, interval: float, prev: NodeMetrics | None = None, nic_gbps: int = 1
+    ) -> list[float]:
         """Преобразует метрику в числовой вектор для MCDM.
 
         Args:

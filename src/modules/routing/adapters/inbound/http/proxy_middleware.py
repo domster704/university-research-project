@@ -5,23 +5,22 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from starlette.responses import Response, JSONResponse
 
-from src.modules.routing.application.ports.inbound.node.choose_node_port import ChooseNodePort
-from src.modules.routing.application.ports.outbound.metrics.metrics_repository import MetricsRepository
+from src.modules.routing.application.ports.inbound.node.choose_node_port import (
+    ChooseNodePort,
+)
+from src.modules.routing.application.ports.outbound.metrics.metrics_repository import (
+    MetricsRepository,
+)
 
 
 class ProxyMiddleware(BaseHTTPMiddleware):
-    INTERNAL_PATHS = {
-        "/stats",
-        "/docs",
-        "/openapi.json",
-        "/redoc"
-    }
+    INTERNAL_PATHS = {"/stats", "/docs", "/openapi.json", "/redoc"}
 
     def __init__(
-            self,
-            app,
-            choose_node: ChooseNodePort,
-            metrics_repo: MetricsRepository,
+        self,
+        app,
+        choose_node: ChooseNodePort,
+        metrics_repo: MetricsRepository,
     ):
         super().__init__(app)
         self.choose_node = choose_node
@@ -36,20 +35,20 @@ class ProxyMiddleware(BaseHTTPMiddleware):
         try:
             node_id, host, port = await self.choose_node.execute()
         except Exception as e:
-            return JSONResponse({
-                "detail": f"choose node failed: {repr(e)}"
-            }, status_code=503)
+            return JSONResponse(
+                {"detail": f"choose node failed: {repr(e)}"}, status_code=503
+            )
 
         target_url = f"http://{host}:{port}{request.url.path}"
         headers = dict(request.headers)
 
         start = time.perf_counter()
         async with client.request(
-                request.method,
-                target_url,
-                params=request.query_params,
-                headers=headers,
-                data=await request.body(),
+            request.method,
+            target_url,
+            params=request.query_params,
+            headers=headers,
+            data=await request.body(),
         ) as resp:
             body = await resp.read()
 

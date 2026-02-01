@@ -6,9 +6,15 @@ from types import SimpleNamespace
 import aiodocker
 from aiodocker.containers import DockerContainer
 
-from src.modules.routing.application.ports.outbound.metrics.collector import CollectorManager
-from src.modules.routing.application.ports.outbound.metrics.metrics_repository import MetricsRepository
-from src.modules.routing.application.ports.outbound.node.node_registry import NodeRegistry
+from src.modules.routing.application.ports.outbound.metrics.collector import (
+    CollectorManager,
+)
+from src.modules.routing.application.ports.outbound.metrics.metrics_repository import (
+    MetricsRepository,
+)
+from src.modules.routing.application.ports.outbound.node.node_registry import (
+    NodeRegistry,
+)
 from src.modules.routing.domain.entities.node.node_metrics import NodeMetrics
 from src.modules.routing.domain.policies.metric_extractor import MetricExtractor
 
@@ -38,10 +44,10 @@ class DockerMetricsCollector(CollectorManager):
     """
 
     def __init__(
-            self,
-            repo: MetricsRepository,
-            registry_updater: NodeRegistry,
-            extractors: list[MetricExtractor],
+        self,
+        repo: MetricsRepository,
+        registry_updater: NodeRegistry,
+        extractors: list[MetricExtractor],
     ):
         self.repo = repo
         self.registry_updater = registry_updater
@@ -61,7 +67,7 @@ class DockerMetricsCollector(CollectorManager):
                     continue
 
                 container_namespace = SimpleNamespace(**await container.show())
-                node_id = container_namespace.Name.replace('/', '')
+                node_id = container_namespace.Name.replace("/", "")
 
                 values: dict[str, float] = {}
                 for extractor in self.extractors:
@@ -77,9 +83,7 @@ class DockerMetricsCollector(CollectorManager):
                 # обновим endpoint (host/port) через отдельный адаптер
                 port = await _get_host_port(container)
                 self.registry_updater.update(
-                    node_id=node_id,
-                    host="127.0.0.1",
-                    port=port
+                    node_id=node_id, host="127.0.0.1", port=port
                 )
 
         finally:

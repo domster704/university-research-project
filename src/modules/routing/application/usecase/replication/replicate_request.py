@@ -3,12 +3,12 @@ import asyncio
 
 class ReplicateRequestUseCase:
     def __init__(
-            self,
-            metrics_provider,
-            registry,
-            http_client,
-            balancer,
-            replicas: int,
+        self,
+        metrics_provider,
+        registry,
+        http_client,
+        balancer,
+        replicas: int,
     ):
         self.metrics_provider = metrics_provider
         self.registry = registry
@@ -18,7 +18,7 @@ class ReplicateRequestUseCase:
 
     async def execute(self, request):
         metrics = await self.metrics_provider.get_current()
-        ranked = self.balancer.rank(metrics)[:self.replicas]
+        ranked = self.balancer.rank(metrics)[: self.replicas]
 
         tasks = [
             self.http_client.send(

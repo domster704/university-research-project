@@ -44,10 +44,7 @@ def topsis(x_matrix: Matrix, w: Vector) -> int:
     # C_i = D_neg / (D_pos + D_neg)
     denominator: Vector = D_pos + D_neg
     C: Vector = np.divide(
-        D_neg,
-        denominator,
-        out=np.zeros_like(denominator),
-        where=denominator != 0
+        D_neg, denominator, out=np.zeros_like(denominator), where=denominator != 0
     )
 
     # Выбор альтернативы с максимальной близостью к идеалу

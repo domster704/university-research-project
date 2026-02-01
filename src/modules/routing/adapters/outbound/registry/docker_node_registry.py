@@ -1,6 +1,8 @@
 from threading import RLock
 
-from src.modules.routing.application.ports.outbound.node.node_registry import NodeRegistry
+from src.modules.routing.application.ports.outbound.node.node_registry import (
+    NodeRegistry,
+)
 
 
 class DockerNodeRegistry(NodeRegistry):

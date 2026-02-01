@@ -137,10 +137,10 @@ async def main():
     ) as tester:
         await tester.multi_load([
             'cpu', 'mem',
-            'cpu', 'mem',
-            'cpu', 'mem',
-            'cpu', 'mem',
-            'cpu', 'mem',
+            # 'cpu', 'mem',
+            # 'cpu', 'mem',
+            # 'cpu', 'mem',
+            # 'cpu', 'mem',
         ])
 
         print(await tester.stats())

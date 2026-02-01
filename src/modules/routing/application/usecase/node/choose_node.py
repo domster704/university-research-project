@@ -1,21 +1,29 @@
 import numpy as np
 
-from old.models import NodeMetrics
-from src.modules.routing.application.ports.inbound.node.choose_node_port import ChooseNodePort
-from src.modules.routing.application.ports.outbound.metrics.metrics_repository import MetricsRepository
-from src.modules.routing.application.ports.outbound.node.node_registry import NodeRegistry
-from src.modules.routing.application.ports.outbound.weights.weights_provider import WeightsProvider
+from src.modules.routing.application.ports.inbound.node.choose_node_port import (
+    ChooseNodePort,
+)
+from src.modules.routing.application.ports.outbound.metrics.metrics_repository import (
+    MetricsRepository,
+)
+from src.modules.routing.application.ports.outbound.node.node_registry import (
+    NodeRegistry,
+)
+from src.modules.routing.application.ports.outbound.weights.weights_provider import (
+    WeightsProvider,
+)
 from src.modules.routing.config.settings import settings
+from src.modules.routing.domain.entities.node.node_metrics import NodeMetrics
 from src.modules.types.numpy import Vector, Matrix
 
 
 class ChooseNodeUseCase(ChooseNodePort):
     def __init__(
-            self,
-            repo: MetricsRepository,
-            registry: NodeRegistry,
-            weights: WeightsProvider,
-            strategy,
+        self,
+        repo: MetricsRepository,
+        registry: NodeRegistry,
+        weights: WeightsProvider,
+        strategy,
     ):
         self.repo = repo
         self.registry = registry
@@ -29,8 +37,7 @@ class ChooseNodeUseCase(ChooseNodePort):
 
         vectors: list[list[float]] = [
             m.to_vector(
-                interval=settings.collector_interval,
-                prev=self.repo.get_prev(m.node_id)
+                interval=settings.collector_interval, prev=self.repo.get_prev(m.node_id)
             )
             for m in metrics
         ]

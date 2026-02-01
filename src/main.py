@@ -12,15 +12,14 @@ def create_app() -> FastAPI:
 
     app = FastAPI(lifespan=lambda app_: lifespan(app_, module))
 
-    app.include_router(ChooseNodeRouter(
-        choose_node=module.choose_node_uc,
-        metrics_agg_repo=module.metrics_agg
-    ).router)
+    app.include_router(
+        ChooseNodeRouter(
+            choose_node=module.choose_node_uc, metrics_agg_repo=module.metrics_agg
+        ).router
+    )
 
     app.add_middleware(
-        ProxyMiddleware,
-        choose_node=module.choose_node_uc,
-        metrics_repo=module.repo
+        ProxyMiddleware, choose_node=module.choose_node_uc, metrics_repo=module.repo
     )
 
     return app

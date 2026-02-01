@@ -1,8 +1,12 @@
 from enum import StrEnum
 
 from src.modules.routing.adapters.outbound.algorithms.mcdm.airm import AIRMStrategy
-from src.modules.routing.adapters.outbound.algorithms.mcdm.electre import ELECTREStrategy
-from src.modules.routing.adapters.outbound.algorithms.mcdm.lc import LinearScalarizationStrategy
+from src.modules.routing.adapters.outbound.algorithms.mcdm.electre import (
+    ELECTREStrategy,
+)
+from src.modules.routing.adapters.outbound.algorithms.mcdm.lc import (
+    LinearScalarizationStrategy,
+)
 from src.modules.routing.adapters.outbound.algorithms.mcdm.saw import SAWStrategy
 from src.modules.routing.adapters.outbound.algorithms.mcdm.topsis import TopsisStrategy
 from src.modules.routing.domain.policies.ranking_strategy import RankingStrategy

@@ -6,9 +6,8 @@ from src.modules.routing.application.dto.incoming_request import IncomingRequest
 
 class HttpClient(Protocol):
     async def send(
-            self,
-            host: str,
-            port: int,
-            request: IncomingRequest,
-    ) -> HttpResponse:
-        ...
+        self,
+        host: str,
+        port: int,
+        request: IncomingRequest,
+    ) -> HttpResponse: ...

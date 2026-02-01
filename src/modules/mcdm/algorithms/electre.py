@@ -24,10 +24,14 @@ def electre(x_matrix: Matrix, w: Vector) -> int:
             concordance[i, j] = w[mask].sum()
 
             # несогласие: макс относительного проигрыша
-            diff: Vector = (x_matrix[i] - x_matrix[j]) / (x_matrix.max(axis=0) - x_matrix.min(axis=0) + 1e-12)
+            diff: Vector = (x_matrix[i] - x_matrix[j]) / (
+                x_matrix.max(axis=0) - x_matrix.min(axis=0) + 1e-12
+            )
             discordance[i, j] = diff.max()
 
-    outrank: BoolVector = (concordance >= _CONC_THRESHOLD) & (discordance <= _DIS_THRESHOLD)
+    outrank: BoolVector = (concordance >= _CONC_THRESHOLD) & (
+        discordance <= _DIS_THRESHOLD
+    )
 
     # считаем число «побеждённых» каждой альтернативой
     scores: IntVector = outrank.sum(axis=1)

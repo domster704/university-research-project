@@ -5,13 +5,13 @@ from src.modules.types.numpy import Matrix, Vector, BoolVector, IntVector
 
 # Время выполнения: 0.006000 секунд
 def airm(
-        x_matrix: Matrix,
-        w: Vector,
-        *,
-        n_iter: int = 1000,
-        alpha_scale: float = 5,
-        benefit_mask=None,
-        random_state: int | None = None,
+    x_matrix: Matrix,
+    w: Vector,
+    *,
+    n_iter: int = 1000,
+    alpha_scale: float = 5,
+    benefit_mask=None,
+    random_state: int | None = None,
 ) -> int:
     """Выбор лучшей альтернативы методом AIRM (Aggregated Indices Randomization Method).
 
@@ -58,7 +58,9 @@ def airm(
     # Для критериев-издержек выполняется инверсия
     x_adj: Matrix = x.copy()
     if (~benefit_mask).any():
-        x_adj[:, ~benefit_mask] = x_adj[:, ~benefit_mask].max(axis=0) - x_adj[:, ~benefit_mask]
+        x_adj[:, ~benefit_mask] = (
+            x_adj[:, ~benefit_mask].max(axis=0) - x_adj[:, ~benefit_mask]
+        )
 
     # Нормализация критериев в диапазон [0, 1]
     col_min: Vector = x_adj.min(axis=0)

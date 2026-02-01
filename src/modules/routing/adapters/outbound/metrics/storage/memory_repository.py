@@ -5,7 +5,9 @@ from threading import RLock
 
 import numpy as np
 
-from src.modules.routing.application.ports.outbound.metrics.metrics_repository import MetricsRepository
+from src.modules.routing.application.ports.outbound.metrics.metrics_repository import (
+    MetricsRepository,
+)
 from src.modules.routing.domain.entities.node.node_metrics import NodeMetrics
 
 
@@ -18,9 +20,9 @@ class InMemoryMetricsRepository(MetricsRepository):
     """
 
     def __init__(
-            self,
-            history_limit: int = 32,
-            latency_window: int = 100,
+        self,
+        history_limit: int = 32,
+        latency_window: int = 100,
     ):
         self._lock = RLock()
         self._history: dict[str, deque[NodeMetrics]] = defaultdict(
@@ -68,11 +70,7 @@ class InMemoryMetricsRepository(MetricsRepository):
 
     def list_latest(self) -> list[NodeMetrics]:
         with self._lock:
-            return [
-                self._with_latency(h[-1])
-                for h in self._history.values()
-                if h
-            ]
+            return [self._with_latency(h[-1]) for h in self._history.values() if h]
 
     def add_latency(self, node_id: str, latency_ms: float) -> None:
         """

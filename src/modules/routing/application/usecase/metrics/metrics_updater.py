@@ -1,6 +1,8 @@
 import asyncio
 
-from src.modules.routing.application.ports.outbound.metrics.collector import CollectorManager
+from src.modules.routing.application.ports.outbound.metrics.collector import (
+    CollectorManager,
+)
 
 
 class MetricsUpdater:
@@ -8,11 +10,7 @@ class MetricsUpdater:
     Application-сервис, который решает КОГДА собирать метрики.
     """
 
-    def __init__(
-            self,
-            collector: CollectorManager,
-            collector_interval: float
-    ):
+    def __init__(self, collector: CollectorManager, collector_interval: float):
         self.collector = collector
         self.period = collector_interval
         self._task: asyncio.Task | None = None

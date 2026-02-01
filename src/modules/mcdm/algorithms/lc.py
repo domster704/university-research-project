@@ -5,8 +5,8 @@ from src.modules.types.numpy import Matrix, Vector
 
 # Время выполнения: 0.006000 секунд
 def lc(
-        x_matrix: Matrix,
-        w: Vector,
+    x_matrix: Matrix,
+    w: Vector,
 ) -> int:
     """Выбор лучшей альтернативы методом взвешенной суммы (Linear Scalarization).
 
